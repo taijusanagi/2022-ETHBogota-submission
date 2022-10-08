@@ -22,29 +22,29 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
   }, [router]);
 
   // ========== OnClick ===========
-  const onClickId = () => {
-    router.push("/account");
-  };
+  // const onClickId = () => {
+  //   router.push("/account");
+  // };
 
   // ========== Style ===========
-  const inActiveProps = {
-    bgColor: "white",
-    _hover: {
-      bgColor: "gray.50",
-    },
-    _active: {
-      bgColor: "gray.100",
-    },
-  };
+  // const inActiveProps = {
+  //   bgColor: "white",
+  //   _hover: {
+  //     bgColor: "gray.50",
+  //   },
+  //   _active: {
+  //     bgColor: "gray.100",
+  //   },
+  // };
 
-  const activeProps = {
-    bgColor: "gray.100",
-    _hover: {},
-    _active: {},
-  };
+  // const activeProps = {
+  //   bgColor: "gray.100",
+  //   _hover: {},
+  //   _active: {},
+  // };
 
-  const idButtonProps = currentPathBase === "account" ? activeProps : inActiveProps;
-  const factoryButtonProps = currentPathBase === "factory" ? activeProps : inActiveProps;
+  // const idButtonProps = currentPathBase === "account" ? activeProps : inActiveProps;
+  // const factoryButtonProps = currentPathBase === "factory" ? activeProps : inActiveProps;
 
   return (
     <Flex minHeight={"100vh"} direction={"column"}>

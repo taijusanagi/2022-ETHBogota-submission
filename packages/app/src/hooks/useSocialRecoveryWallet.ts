@@ -1,12 +1,19 @@
+/* eslint-disable camelcase */
+import { EntryPoint, EntryPoint__factory } from "@account-abstraction/contracts";
+import { SampleRecipient, SampleRecipient__factory } from "@account-abstraction/utils/dist/src/types";
 import { useEffect, useState } from "react";
-import { useSigner } from "wagmi";
+import { useNetwork, useSigner } from "wagmi";
 
 import { SocialRecoveryWalletAPI } from "../../../contracts/lib/SocialRecoveryWalletAPI";
 
 export const useSocialRecoveryWallet = () => {
   const { data: signer } = useSigner();
+
+  const network = useNetwork();
   const [socialRecoveryWalletAPI, setSocialRecoveryWalletAPI] = useState<SocialRecoveryWalletAPI>();
   const [socialRecoveryWalletAddress, setSocialRecoveryWalletAddress] = useState("");
+  const [entryPoint, setEntryPoint] = useState<EntryPoint>();
+  const [sampleRecipient, setSampleRecipient] = useState<SampleRecipient>();
 
   useEffect(() => {
     if (!signer) {
@@ -14,7 +21,11 @@ export const useSocialRecoveryWallet = () => {
       setSocialRecoveryWalletAddress("");
       return;
     }
-    import(`../../../contracts/deployments/${process.env.NETWORK}.json`).then((deployments) => {
+    if (!network.chain || (network.chain.network !== "localhost" && network.chain.network !== "goerli")) {
+      alert("please connect goerli network!");
+      return;
+    }
+    import(`../../../contracts/deployments/${network.chain.network}.json`).then((deployments) => {
       const socialRecoveryWalletAPI = new SocialRecoveryWalletAPI({
         // assuming if signer is not null, provider is also not null
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -28,8 +39,15 @@ export const useSocialRecoveryWallet = () => {
       socialRecoveryWalletAPI.getWalletAddress().then((socialRecoveryWalletAddress) => {
         setSocialRecoveryWalletAddress(socialRecoveryWalletAddress);
       });
-    });
-  }, [signer]);
+      // assuming if signer is not null, provider is also not null
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      const entryPoint = EntryPoint__factory.connect(deployments.entryPoint, signer);
+      setEntryPoint(entryPoint);
 
-  return { socialRecoveryWalletAPI, socialRecoveryWalletAddress };
+      const sampleRecipient = SampleRecipient__factory.connect(deployments.sampleRecipient, signer);
+      setSampleRecipient(sampleRecipient);
+    });
+  }, [signer, network.chain]);
+
+  return { entryPoint, sampleRecipient, socialRecoveryWalletAPI, socialRecoveryWalletAddress };
 };
