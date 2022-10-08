@@ -24,7 +24,7 @@ const signer = provider.getSigner();
 
 describe("SocialRecoveryWallet", () => {
   let owner: Wallet;
-  let guardians: SignerWithAddress[];
+  let guardians: string[];
   let threshold: number;
   let api: SimpleWalletAPI;
   let entryPoint: EntryPoint;
@@ -33,6 +33,8 @@ describe("SocialRecoveryWallet", () => {
   let walletAddress: string;
   let walletDeployed = false;
 
+  let signers: SignerWithAddress[];
+
   before("init", async () => {
     entryPoint = await new EntryPoint__factory(signer).deploy(1, 1);
     beneficiary = await signer.getAddress();
@@ -40,8 +42,8 @@ describe("SocialRecoveryWallet", () => {
     owner = Wallet.createRandom();
 
     // reference test already use the signer[0] as signer
-    const signers = await ethers.getSigners();
-    guardians = [signers[1], signers[2], signers[3]];
+    signers = await ethers.getSigners();
+    guardians = [signers[1].address, signers[2].address, signers[3].address];
 
     threshold = 2;
     const factoryAddress = await DeterministicDeployer.deploy(SocialRecoveryWalletDeployer__factory.bytecode);
@@ -153,7 +155,7 @@ describe("SocialRecoveryWallet", () => {
 
     it("should set constructor value", async () => {
       for (const guardian of guardians) {
-        expect(await contract.isGuardian(guardian.address)).to.equal(true);
+        expect(await contract.isGuardian(guardian)).to.equal(true);
       }
       expect(await contract.threshold()).to.equal(threshold);
     });
@@ -162,8 +164,8 @@ describe("SocialRecoveryWallet", () => {
      ** due to time constrain, only positive test is done
      **/
     it("should work", async () => {
-      const initiateGuardian = guardians[0];
-      const supportGuardian = guardians[1];
+      const initiateGuardian = signers[1];
+      const supportGuardian = signers[2];
       const newOwner = Wallet.createRandom();
       await contract.connect(initiateGuardian).initiateRecovery(newOwner.address);
       await contract.connect(supportGuardian).supportRecovery(newOwner.address);

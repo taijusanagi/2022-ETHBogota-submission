@@ -1,4 +1,7 @@
 const nextConfig = {
+  env: {
+    NETWORK: process.env.NETWORK,
+  },
   reactStrictMode: true,
   swcMinify: true,
   experimental: {

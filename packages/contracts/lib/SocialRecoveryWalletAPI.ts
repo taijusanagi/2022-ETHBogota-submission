@@ -1,23 +1,21 @@
 /* eslint-disable camelcase */
 import { SimpleWalletAPI } from "@account-abstraction/sdk";
 import { SimpleWalletApiParams } from "@account-abstraction/sdk/dist/src/SimpleWalletAPI";
-import { Signer } from "ethers";
 import { hexConcat } from "ethers/lib/utils";
 
 import {
   SocialRecoveryWallet,
   SocialRecoveryWallet__factory,
-  // SocialRecoveryWalletDeployer,
   SocialRecoveryWalletDeployer__factory,
 } from "../typechain-types";
 
 export interface SocialRecoveryWalletApiParams extends SimpleWalletApiParams {
-  guardians: Signer[];
+  guardians: string[];
   threshold: number;
 }
 
 export class SocialRecoveryWalletAPI extends SimpleWalletAPI {
-  guardians: Signer[];
+  guardians: string[];
   threshold: number;
 
   walletContract?: SocialRecoveryWallet;
@@ -53,7 +51,7 @@ export class SocialRecoveryWalletAPI extends SimpleWalletAPI {
       this.factory.interface.encodeFunctionData("deployWallet", [
         this.entryPointAddress,
         await this.owner.getAddress(),
-        await Promise.all(this.guardians.map((guardian) => guardian.getAddress())),
+        this.guardians,
         this.threshold,
         this.index,
       ]),

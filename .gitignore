@@ -116,4 +116,4 @@ coverage.json
 cache
 artifacts
 typechain-types
-localhost
+packages/contracts/deployments/localhost.json

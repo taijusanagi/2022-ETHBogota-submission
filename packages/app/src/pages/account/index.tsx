@@ -1,5 +1,6 @@
 import { Button, FormControl, FormHelperText, FormLabel, Heading, HStack, Input, Stack, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
+import { NEXT_BUILTIN_DOCUMENT } from "next/dist/shared/lib/constants";
 import { useState } from "react";
 import { useAccount, useProvider, useSigner } from "wagmi";
 
@@ -23,18 +24,19 @@ const AccountPage: NextPage = () => {
     setMode("list");
   };
 
-  const deploy = () => {
+  const deploy = async () => {
     if (!signer || !signer.provider) {
       return;
     }
     const provider = signer.provider;
+    const deployments = await import(`../../../../contracts/deployments/${process.env.NETWORK}.json`);
 
     const api = new SocialRecoveryWalletAPI({
       provider,
-      entryPointAddress: entryPoint.address,
-      owner,
-      guardians,
-      threshold,
+      entryPointAddress: deployments.entryPoint,
+      owner: signer,
+      guardians: guardian ? [guardian] : [],
+      threshold: guardian ? 1 : 0,
       factoryAddress,
     });
   };
@@ -68,7 +70,9 @@ const AccountPage: NextPage = () => {
             <Button w="full" onClick={moveToList}>
               Cancel
             </Button>
-            <Button w="full">Deploy</Button>
+            <Button w="full" onClick={deploy}>
+              Deploy
+            </Button>
           </HStack>
         </Stack>
       )}
