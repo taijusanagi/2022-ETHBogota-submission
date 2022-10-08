@@ -9,6 +9,7 @@
     "build": "next build"
   },
   "dependencies": {
+    "@account-abstraction/sdk": "^0.2.1",
     "@apollo/client": "^3.6.9",
     "@apollo/react-hooks": "^4.0.0",
     "@chakra-ui/icons": "^2.0.10",

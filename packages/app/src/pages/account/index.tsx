@@ -1,4 +1,5 @@
 import { Button, FormControl, FormHelperText, FormLabel, Heading, HStack, Input, Stack, Text } from "@chakra-ui/react";
+import { ethers } from "ethers";
 import { NextPage } from "next";
 import { NEXT_BUILTIN_DOCUMENT } from "next/dist/shared/lib/constants";
 import { useState } from "react";
@@ -28,17 +29,26 @@ const AccountPage: NextPage = () => {
     if (!signer || !signer.provider) {
       return;
     }
-    const provider = signer.provider;
+
+    console.log(signer);
+    console.log(signer.provider);
     const deployments = await import(`../../../../contracts/deployments/${process.env.NETWORK}.json`);
+    console.log(deployments);
+
+    const provider = signer.provider!;
 
     const api = new SocialRecoveryWalletAPI({
       provider,
       entryPointAddress: deployments.entryPoint,
       owner: signer,
-      guardians: guardian ? [guardian] : [],
-      threshold: guardian ? 1 : 0,
-      factoryAddress,
+      guardians: [],
+      threshold: 0,
+      factoryAddress: deployments.factory,
     });
+    console.log(api);
+
+    const deployedAddress = await api.getWalletAddress();
+    console.log(deployedAddress);
   };
 
   return (

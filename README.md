@@ -1,5 +1,15 @@
 # ETHBogota Submission: Account Abstraction with Social Recovery
 
+## Main stack
+
+- AcountAbstraction
+- Web3Auth
+- WalletConnect
+
+## Use case
+
+TBD
+
 ## Disclaimer
 
 Currently, the social recovery wallet has simple functions

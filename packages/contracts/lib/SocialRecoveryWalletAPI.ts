@@ -34,10 +34,6 @@ export class SocialRecoveryWalletAPI extends SimpleWalletAPI {
     return this.walletContract;
   }
 
-  /**
-   * return the value to put into the "initCode" field, if the wallet is not yet deployed.
-   * this value holds the "factory" address, followed by this wallet's information
-   */
   async getWalletInitCode(): Promise<string> {
     if (this.factory == null) {
       if (this.factoryAddress != null && this.factoryAddress !== "") {
@@ -46,15 +42,14 @@ export class SocialRecoveryWalletAPI extends SimpleWalletAPI {
         throw new Error("no factory to get initCode");
       }
     }
-    return hexConcat([
-      this.factory.address,
-      this.factory.interface.encodeFunctionData("deployWallet", [
-        this.entryPointAddress,
-        await this.owner.getAddress(),
-        this.guardians,
-        this.threshold,
-        this.index,
-      ]),
+    const ownerAddress = await this.owner.getAddress();
+    const data = this.factory.interface.encodeFunctionData("deployWallet", [
+      this.entryPointAddress,
+      ownerAddress,
+      this.guardians,
+      this.threshold,
+      this.index,
     ]);
+    return hexConcat([this.factory.address, data]);
   }
 }

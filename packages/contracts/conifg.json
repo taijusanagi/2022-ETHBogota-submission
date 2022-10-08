@@ -1,0 +1,5 @@
+{
+  "localhost": {
+    "rpc": "http://localhost:8545"
+  }
+}
