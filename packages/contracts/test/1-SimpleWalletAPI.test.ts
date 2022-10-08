@@ -1,4 +1,9 @@
 /* eslint-disable camelcase */
+
+/**
+ ** This copied from @account-abstraction/sdk
+ **/
+
 import {
   EntryPoint,
   EntryPoint__factory,
