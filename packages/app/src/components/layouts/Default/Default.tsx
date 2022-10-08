@@ -74,7 +74,9 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
             </ButtonGroup>
           </Center>
           <Flex justify="space-between" alignItems={"center"} h="8">
-            <Text fontSize="xl" fontWeight={"bold"}>{`${isDesktop ? "ETHBogota " : ""}🌿`}</Text>
+            <Text fontSize="xl" fontWeight={"bold"}>
+              SocialWallet
+            </Text>
             <HStack>
               <ConnectButton showBalance={false} />
             </HStack>
