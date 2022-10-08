@@ -1,8 +1,7 @@
-import { Box, Button, ButtonGroup, Center, Container, Flex, HStack, IconButton, Text } from "@chakra-ui/react";
+import { Box, Button, ButtonGroup, Center, Container, Flex, HStack, Text } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
-import { FiMenu } from "react-icons/fi";
 
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 
@@ -25,10 +24,6 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
   // ========== OnClick ===========
   const onClickId = () => {
     router.push("/account");
-  };
-
-  const onClickConnect = () => {
-    router.push("/connect");
   };
 
   // ========== Style ===========
@@ -68,9 +63,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
               <Button onClick={onClickId} {...idButtonProps}>
                 Account
               </Button>
-              <Button onClick={onClickConnect} {...factoryButtonProps}>
-                Connect
-              </Button>
+              <Button {...factoryButtonProps}>TODO</Button>
             </ButtonGroup>
           </Center>
           <Flex justify="space-between" alignItems={"center"} h="8">
@@ -83,7 +76,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
           </Flex>
         </Box>
       </Container>
-      <Container flex={1} maxW="8xl">
+      <Container flex={1} maxW="8xl" py="8">
         {children}
       </Container>
     </Flex>
