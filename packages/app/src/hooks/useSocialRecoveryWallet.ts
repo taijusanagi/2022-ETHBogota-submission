@@ -5,14 +5,17 @@ import { SocialRecoveryWalletAPI } from "../../../contracts/lib/SocialRecoveryWa
 
 export const useSocialRecoveryWallet = () => {
   const { data: signer } = useSigner();
-  const [socialRecoveryWallet, setSocialRecoveryWallet] = useState<SocialRecoveryWalletAPI>();
+  const [socialRecoveryWalletAPI, setSocialRecoveryWalletAPI] = useState<SocialRecoveryWalletAPI>();
+  const [socialRecoveryWalletAddress, setSocialRecoveryWalletAddress] = useState("");
 
   useEffect(() => {
     if (!signer) {
+      setSocialRecoveryWalletAPI(undefined);
+      setSocialRecoveryWalletAddress("");
       return;
     }
     import(`../../../contracts/deployments/${process.env.NETWORK}.json`).then((deployments) => {
-      const socialRecoveryWallet = new SocialRecoveryWalletAPI({
+      const socialRecoveryWalletAPI = new SocialRecoveryWalletAPI({
         // assuming if signer is not null, provider is also not null
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         provider: signer.provider!,
@@ -20,9 +23,13 @@ export const useSocialRecoveryWallet = () => {
         owner: signer,
         factoryAddress: deployments.factory,
       });
-      setSocialRecoveryWallet(socialRecoveryWallet);
+      setSocialRecoveryWalletAPI(socialRecoveryWalletAPI);
+      // get create2 address when init the app
+      socialRecoveryWalletAPI.getWalletAddress().then((socialRecoveryWalletAddress) => {
+        setSocialRecoveryWalletAddress(socialRecoveryWalletAddress);
+      });
     });
   }, [signer]);
 
-  return { socialRecoveryWallet };
+  return { socialRecoveryWalletAPI, socialRecoveryWalletAddress };
 };
