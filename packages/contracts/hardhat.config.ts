@@ -1,4 +1,8 @@
-import "@nomicfoundation/hardhat-toolbox";
+import "@nomicfoundation/hardhat-chai-matchers";
+import "@nomiclabs/hardhat-ethers";
+import "@nomiclabs/hardhat-etherscan";
+import "hardhat-gas-reporter";
+import "solidity-coverage";
 import "@openzeppelin/hardhat-upgrades";
 import "hardhat-deploy";
 
@@ -33,6 +37,9 @@ const config: HardhatUserConfig = {
       url,
       accounts,
     },
+  },
+  typechain: {
+    outDir: 'src/types',
   },
 };
 

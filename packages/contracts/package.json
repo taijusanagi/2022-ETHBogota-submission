@@ -49,6 +49,7 @@
     "@account-abstraction/sdk": "^0.2.1",
     "@opensea/seaport-js": "^1.0.6",
     "@openzeppelin/contracts": "^4.7.3",
+    "@openzeppelin/contracts-upgradeable": "^4.7.3",
     "@thirdweb-dev/contracts": "3.1.8",
     "@thirdweb-dev/sdk": "^3.0.4"
   }
