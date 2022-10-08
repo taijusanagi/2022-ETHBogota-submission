@@ -20,10 +20,13 @@ import { SocialRecoveryWalletAPI } from "../lib/SocialRecoveryWalletAPI";
 import { SocialRecoveryWallet, SocialRecoveryWalletDeployer__factory } from "../typechain-types";
 
 const provider = ethers.provider;
-const signer = provider.getSigner();
 
 describe("SocialRecoveryWallet", () => {
-  let owner: Wallet;
+  let signer: SignerWithAddress;
+  let owner: SignerWithAddress;
+  let initiateGuardian: SignerWithAddress;
+  let supportGuardian: SignerWithAddress;
+  let additionalGuardian: SignerWithAddress;
   let guardians: string[];
   let threshold: number;
   let api: SimpleWalletAPI;
@@ -33,32 +36,23 @@ describe("SocialRecoveryWallet", () => {
   let walletAddress: string;
   let walletDeployed = false;
 
-  let signers: SignerWithAddress[];
-
   before("init", async () => {
+    [signer, owner, initiateGuardian, supportGuardian, additionalGuardian] = await ethers.getSigners();
     entryPoint = await new EntryPoint__factory(signer).deploy(1, 1);
     beneficiary = await signer.getAddress();
     recipient = await new SampleRecipient__factory(signer).deploy();
-    owner = Wallet.createRandom();
-
-    // reference test already use the signer[0] as signer
-    signers = await ethers.getSigners();
-    guardians = [signers[1].address, signers[2].address, signers[3].address];
-
+    guardians = [initiateGuardian.address, supportGuardian.address, additionalGuardian.address];
     threshold = 2;
     const factoryAddress = await DeterministicDeployer.deploy(SocialRecoveryWalletDeployer__factory.bytecode);
-
     api = new SocialRecoveryWalletAPI({
       provider,
       entryPointAddress: entryPoint.address,
       owner,
-      guardians,
-      threshold,
       factoryAddress,
     });
   });
 
-  describe("Same test with SimpleWalletAPI", () => {
+  describe("Same test with SimpleWalletAPI to assure the compatibility", () => {
     it("#getRequestId should match entryPoint.getRequestId", async function () {
       const userOp: UserOperationStruct = {
         sender: "0x".padEnd(42, "1"),
@@ -151,6 +145,7 @@ describe("SocialRecoveryWallet", () => {
 
     before("init", async () => {
       contract = await ethers.getContractAt("SocialRecoveryWallet", walletAddress);
+      await contract.connect(owner).setGuardians(guardians, threshold);
     });
 
     it("should set constructor value", async () => {
@@ -164,8 +159,6 @@ describe("SocialRecoveryWallet", () => {
      ** due to time constrain, only positive test is done
      **/
     it("should work", async () => {
-      const initiateGuardian = signers[1];
-      const supportGuardian = signers[2];
       const newOwner = Wallet.createRandom();
       await contract.connect(initiateGuardian).initiateRecovery(newOwner.address);
       await contract.connect(supportGuardian).supportRecovery(newOwner.address);

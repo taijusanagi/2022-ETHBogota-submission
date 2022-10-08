@@ -70,12 +70,9 @@ contract SocialRecoveryWallet is SimpleWallet {
   /// @notice emit when recovery is executed
   event RecoveryExecuted(address oldOwner, address newOwner, uint256 indexed round);
 
-  constructor(
-    IEntryPoint anEntryPoint,
-    address anOwner,
-    address[] memory guardians,
-    uint256 _threshold
-  ) SimpleWallet(anEntryPoint, anOwner) {
+  constructor(IEntryPoint anEntryPoint, address anOwner) SimpleWallet(anEntryPoint, anOwner) {}
+
+  function setGuardians(address[] memory guardians, uint256 _threshold) public {
     require(_threshold <= guardians.length, "threshold too high");
     for (uint256 i = 0; i < guardians.length; i++) {
       require(!isGuardian[guardians[i]], "duplicate guardian");

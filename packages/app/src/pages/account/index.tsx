@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useAccount, useProvider, useSigner } from "wagmi";
 
 import { DefaultLayout } from "@/components/layouts/Default";
+import { useSocialRecoveryWallet } from "@/hooks/useSocialRecoveryWallet";
 
 import { SocialRecoveryWalletAPI } from "../../../../contracts/lib/SocialRecoveryWalletAPI";
 
@@ -17,6 +18,8 @@ const AccountPage: NextPage = () => {
   const { address } = useAccount();
   const { data: signer } = useSigner();
 
+  const { socialRecoveryWallet } = useSocialRecoveryWallet();
+
   const moveToCreate = () => {
     setMode("create");
   };
@@ -26,28 +29,10 @@ const AccountPage: NextPage = () => {
   };
 
   const deploy = async () => {
-    if (!signer || !signer.provider) {
+    if (!socialRecoveryWallet) {
       return;
     }
-
-    console.log(signer);
-    console.log(signer.provider);
-    const deployments = await import(`../../../../contracts/deployments/${process.env.NETWORK}.json`);
-    console.log(deployments);
-
-    const provider = signer.provider!;
-
-    const api = new SocialRecoveryWalletAPI({
-      provider,
-      entryPointAddress: deployments.entryPoint,
-      owner: signer,
-      guardians: [],
-      threshold: 0,
-      factoryAddress: deployments.factory,
-    });
-    console.log(api);
-
-    const deployedAddress = await api.getWalletAddress();
+    const deployedAddress = await socialRecoveryWallet.getWalletAddress();
     console.log(deployedAddress);
   };
 
