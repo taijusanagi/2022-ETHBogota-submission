@@ -1,8 +1,6 @@
 import "@nomicfoundation/hardhat-chai-matchers";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-etherscan";
-import "hardhat-gas-reporter";
-import "solidity-coverage";
 import "@openzeppelin/hardhat-upgrades";
 import "hardhat-deploy";
 
@@ -24,22 +22,6 @@ const config: HardhatUserConfig = {
         runs: 200,
       },
     },
-  },
-  networks: {
-    hardhat: {
-      forking: {
-        url,
-      },
-      chainId: 137,
-    },
-    polygon: {
-      chainId: 137,
-      url,
-      accounts,
-    },
-  },
-  typechain: {
-    outDir: 'src/types',
   },
 };
 

@@ -47,6 +47,7 @@
   "dependencies": {
     "@account-abstraction/contracts": "^0.2.0",
     "@account-abstraction/sdk": "^0.2.1",
+    "@account-abstraction/utils": "^0.2.1",
     "@opensea/seaport-js": "^1.0.6",
     "@openzeppelin/contracts": "^4.7.3",
     "@openzeppelin/contracts-upgradeable": "^4.7.3",
