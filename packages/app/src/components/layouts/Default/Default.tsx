@@ -27,12 +27,8 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
     router.push("/account");
   };
 
-  const onClickFactory = () => {
-    router.push("/factory");
-  };
-
-  const onClickOutlet = () => {
-    router.push("/outlet");
+  const onClickConnect = () => {
+    router.push("/connect");
   };
 
   // ========== Style ===========
@@ -54,7 +50,6 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
 
   const idButtonProps = currentPathBase === "account" ? activeProps : inActiveProps;
   const factoryButtonProps = currentPathBase === "factory" ? activeProps : inActiveProps;
-  const outletButtonProps = currentPathBase === "outlet" ? activeProps : inActiveProps;
 
   return (
     <Flex minHeight={"100vh"} direction={"column"}>
@@ -73,11 +68,8 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
               <Button onClick={onClickId} {...idButtonProps}>
                 Account
               </Button>
-              <Button onClick={onClickFactory} {...factoryButtonProps}>
-                Factory
-              </Button>
-              <Button onClick={onClickOutlet} {...outletButtonProps}>
-                Outlet
+              <Button onClick={onClickConnect} {...factoryButtonProps}>
+                Connect
               </Button>
             </ButtonGroup>
           </Center>
@@ -85,13 +77,6 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
             <Text fontSize="xl" fontWeight={"bold"}>{`${isDesktop ? "ETHBogota " : ""}🌿`}</Text>
             <HStack>
               <ConnectButton showBalance={false} />
-              <IconButton
-                variant="ghost"
-                icon={<FiMenu fontSize="1.25rem" />}
-                aria-label="Open Menu"
-                _hover={{}}
-                _active={{}}
-              />
             </HStack>
           </Flex>
         </Box>
