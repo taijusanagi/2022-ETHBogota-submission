@@ -45,7 +45,8 @@
     "typechain": "^8.1.0"
   },
   "dependencies": {
-    "@gnosis.pm/safe-contrancts": "^3.1.1",
+    "@account-abstraction/contracts": "^0.2.0",
+    "@account-abstraction/sdk": "^0.2.1",
     "@opensea/seaport-js": "^1.0.6",
     "@openzeppelin/contracts": "^4.7.3",
     "@thirdweb-dev/contracts": "3.1.8",
