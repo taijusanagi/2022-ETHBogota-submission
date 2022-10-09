@@ -1,8 +1,7 @@
-import { Box, Center, Container, Flex, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, ButtonGroup, Center, Container, Flex, HStack, Text } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
-import { useConnect } from "wagmi";
 
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 
@@ -14,8 +13,6 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
   // ========== Nextjs ===========
   const router = useRouter();
 
-  const { connect } = useConnect();
-
   // ========== Hook ===========
   const { isDesktop } = useIsDesktop();
 
@@ -25,29 +22,38 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
   }, [router]);
 
   // ========== OnClick ===========
-  // const onClickId = () => {
-  //   router.push("/account");
-  // };
+  const onClickAccount = () => {
+    router.push("/");
+  };
+
+  const onClickGuardian = () => {
+    router.push("/guardian");
+  };
+
+  const onClickConnect = () => {
+    router.push("/connect");
+  };
 
   // ========== Style ===========
-  // const inActiveProps = {
-  //   bgColor: "white",
-  //   _hover: {
-  //     bgColor: "gray.50",
-  //   },
-  //   _active: {
-  //     bgColor: "gray.100",
-  //   },
-  // };
+  const inActiveProps = {
+    bgColor: "white",
+    _hover: {
+      bgColor: "gray.50",
+    },
+    _active: {
+      bgColor: "gray.100",
+    },
+  };
 
-  // const activeProps = {
-  //   bgColor: "gray.100",
-  //   _hover: {},
-  //   _active: {},
-  // };
+  const activeProps = {
+    bgColor: "gray.100",
+    _hover: {},
+    _active: {},
+  };
 
-  // const idButtonProps = currentPathBase === "account" ? activeProps : inActiveProps;
-  // const factoryButtonProps = currentPathBase === "factory" ? activeProps : inActiveProps;
+  const accountButtonProps = currentPathBase === "" ? activeProps : inActiveProps;
+  const factoryButtonProps = currentPathBase === "guardian" ? activeProps : inActiveProps;
+  const connectButtonProps = currentPathBase === "connect" ? activeProps : inActiveProps;
 
   return (
     <Flex minHeight={"100vh"} direction={"column"}>
@@ -62,24 +68,29 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
             bottom={!isDesktop ? "0" : undefined}
             h="8"
           >
-            {/* <ButtonGroup bgColor={"white"} py="1" px="1" rounded="xl" shadow="md" size="xs">
-              <Button onClick={onClickId} {...idButtonProps}>
+            <ButtonGroup bgColor={"white"} py="1" px="1" rounded="xl" shadow="md" size="xs">
+              <Button onClick={onClickAccount} {...accountButtonProps}>
                 Account
               </Button>
-              <Button {...factoryButtonProps}>TODO</Button>
-            </ButtonGroup> */}
+              <Button onClick={onClickGuardian} {...factoryButtonProps}>
+                Guardian
+              </Button>
+              <Button onClick={onClickConnect} {...connectButtonProps}>
+                Connect
+              </Button>
+            </ButtonGroup>
           </Center>
           <Flex justify="space-between" alignItems={"center"} h="8">
             <Text fontSize="xl" fontWeight={"bold"}>
-              SocialWallet
+              AcountAbstraction
             </Text>
             <HStack>
-              <ConnectButton showBalance={false} />
+              <ConnectButton showBalance={false} chainStatus="none" />
             </HStack>
           </Flex>
         </Box>
       </Container>
-      <Container flex={1} maxW="8xl" py="8">
+      <Container flex={1} maxW="xl" py="12">
         {children}
       </Container>
     </Flex>

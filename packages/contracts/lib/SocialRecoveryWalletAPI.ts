@@ -20,8 +20,6 @@ export class SocialRecoveryWalletAPI extends SimpleWalletAPI {
   }
 
   async getWalletInitCode(): Promise<string> {
-    console.log("please come 1");
-
     if (this.factory == null) {
       if (this.factoryAddress != null && this.factoryAddress !== "") {
         this.factory = SocialRecoveryWalletDeployer__factory.connect(this.factoryAddress, this.provider);
@@ -29,7 +27,6 @@ export class SocialRecoveryWalletAPI extends SimpleWalletAPI {
         throw new Error("no factory to get initCode");
       }
     }
-    console.log("please come 2");
     const ownerAddress = await this.owner.getAddress();
     const data = this.factory.interface.encodeFunctionData("deployWallet", [
       this.entryPointAddress,

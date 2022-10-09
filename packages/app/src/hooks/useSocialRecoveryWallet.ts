@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useAccount, useNetwork, useSigner } from "wagmi";
 
 import { SocialRecoveryWalletAPI } from "../../../contracts/lib/SocialRecoveryWalletAPI";
+import { SocialRecoveryWallet, SocialRecoveryWallet__factory } from "../../../contracts/typechain-types";
 
 export const useSocialRecoveryWallet = () => {
   const { data: signer } = useSigner();
@@ -14,6 +15,7 @@ export const useSocialRecoveryWallet = () => {
   const [socialRecoveryWalletAddress, setSocialRecoveryWalletAddress] = useState("");
   const [isDeployed, setIsDeployed] = useState(false);
   const [entryPoint, setEntryPoint] = useState<EntryPoint>();
+  const [contract, setContract] = useState<SocialRecoveryWallet>();
 
   useEffect(() => {
     if (!signer || !isConnected) {
@@ -49,10 +51,14 @@ export const useSocialRecoveryWallet = () => {
           window.localStorage.setItem(`${address}:connectedNetwork`, socialRecoveryWalletAddress);
           setSocialRecoveryWalletAddress(socialRecoveryWalletAddress);
           signer.provider!.getCode(socialRecoveryWalletAddress).then((code) => setIsDeployed(code !== "0x"));
+          const contract = SocialRecoveryWallet__factory.connect(socialRecoveryWalletAddress, signer);
+          setContract(contract);
         });
       } else {
         setSocialRecoveryWalletAddress(socialRecoveryWalletAddress);
         signer.provider!.getCode(socialRecoveryWalletAddress).then((code) => setIsDeployed(code !== "0x"));
+        const contract = SocialRecoveryWallet__factory.connect(socialRecoveryWalletAddress, signer);
+        setContract(contract);
       }
 
       // assuming if signer is not null, provider is also not null
@@ -62,5 +68,5 @@ export const useSocialRecoveryWallet = () => {
     });
   }, [signer, network.chain, isConnected]);
 
-  return { entryPoint, socialRecoveryWalletAPI, socialRecoveryWalletAddress, isDeployed };
+  return { entryPoint, socialRecoveryWalletAPI, socialRecoveryWalletAddress, isDeployed, contract };
 };
