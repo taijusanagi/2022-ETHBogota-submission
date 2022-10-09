@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Button, FormControl, FormHelperText, FormLabel, Stack, Text } from "@chakra-ui/react";
 import { ethers } from "ethers";
 import { parseEther } from "ethers/lib/utils";
@@ -9,6 +10,7 @@ import { DefaultLayout } from "@/components/layouts/Default";
 import { useSocialRecoveryWallet } from "@/hooks/useSocialRecoveryWallet";
 
 import { NULL_ADDRESS, NULL_BYTES } from "../../../contracts/lib/utils";
+import { SocialRecoveryWallet__factory } from "../../../contracts/typechain-types";
 
 export interface PeerMeta {
   name: string;
@@ -22,6 +24,8 @@ const HomePage: NextPage = () => {
   const { data: signer } = useSigner();
   const { address } = useAccount();
   const [isWalletConnectLoading] = useState(false);
+
+  const [owner, setOwner] = useState("");
 
   const deploy = async () => {
     if (!socialRecoveryWalletAPI || !entryPoint || !signer || !address) {
@@ -43,6 +47,19 @@ const HomePage: NextPage = () => {
     });
     await entryPoint.handleOps([op], address);
   };
+  useEffect(() => {
+    if (!signer || !address || !socialRecoveryWalletAddress) {
+      return;
+    }
+    if (isDeployed) {
+      const contract = SocialRecoveryWallet__factory.connect(socialRecoveryWalletAddress, signer);
+      contract.owner().then((owner) => {
+        setOwner(owner);
+      });
+    } else {
+      setOwner(address);
+    }
+  }, [signer, address, socialRecoveryWalletAddress, isDeployed]);
 
   return (
     <DefaultLayout>
@@ -51,21 +68,36 @@ const HomePage: NextPage = () => {
           <Stack spacing="4">
             <Stack spacing="2">
               <FormControl>
-                <FormLabel fontSize="lg">AcountAbstraction Address</FormLabel>
+                <FormLabel fontSize="md" fontWeight="bold">
+                  AcountAbstraction Address
+                </FormLabel>
                 <Text fontSize="xs">{socialRecoveryWalletAddress}</Text>
                 <FormHelperText fontSize="xs" color="blue.600">
                   * AA address is determined counterfactually by create2
                 </FormHelperText>
               </FormControl>
               <FormControl>
-                <FormLabel fontSize="lg">IsDeployed</FormLabel>
+                <FormLabel fontSize="md" fontWeight="bold">
+                  Owner
+                </FormLabel>
+                <Text fontSize="xs">{owner}</Text>
+                <FormHelperText fontSize="xs" color="blue.600">
+                  * owner is EOA for demo, but it could be any for easy onboarding
+                </FormHelperText>
+              </FormControl>
+              <FormControl>
+                <FormLabel fontSize="md" fontWeight="bold">
+                  IsDeployed
+                </FormLabel>
                 <Text fontSize="xs">{isDeployed.toString()}</Text>
                 <FormHelperText fontSize="xs" color="blue.600">
                   * no need to deploy to use acount abstraction wallet
                 </FormHelperText>
               </FormControl>
               <FormControl>
-                <FormLabel fontSize="lg">Balance</FormLabel>
+                <FormLabel fontSize="md" fontWeight="bold">
+                  Balance
+                </FormLabel>
                 <Text fontSize="xs">{ethers.utils.formatEther(balance)} ETH</Text>
                 <FormHelperText fontSize="xs" color="blue.600">
                   * paymaster is not implemented so deposit is required for demo

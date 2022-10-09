@@ -19,13 +19,20 @@ const HomePage: NextPage = () => {
   const router = useRouter();
   const { socialRecoveryWalletAddress, contract } = useSocialRecoveryWallet();
   const [guardian, setGuardians] = useState("");
+  const [guardian2, setGuardians2] = useState("");
   const { data: signer } = useSigner();
+
+  const [origin, setOrigin] = useState("");
+
+  useEffect(() => {
+    setOrigin(window.location.origin);
+  }, []);
 
   const txSetGuardians = async () => {
     if (!contract) {
       return;
     }
-    await contract.setGuardians([guardian], 1);
+    await contract.setGuardians([guardian, guardian2], 2);
   };
 
   const onClickLink = () => {
@@ -39,22 +46,23 @@ const HomePage: NextPage = () => {
           <Stack spacing="4">
             <Stack spacing="2">
               <FormControl>
-                <FormLabel fontSize="lg">AcountAbstraction Address</FormLabel>
+                <FormLabel fontSize="md" fontWeight="bold">
+                  AcountAbstraction Address
+                </FormLabel>
                 <Text fontSize="xs">{socialRecoveryWalletAddress}</Text>
               </FormControl>
             </Stack>
             <Stack spacing="2">
               <FormControl>
-                <FormLabel>Gardian</FormLabel>
+                <FormLabel>Gardian 1</FormLabel>
                 <Input type="text" fontSize="xs" value={guardian} onChange={(e) => setGuardians(e.target.value)} />
-                <FormHelperText fontSize="xs" color="blue.600">
-                  * only one gardian is set for simple demo
-                </FormHelperText>
-                <FormHelperText fontSize="xs" color="blue.600">
-                  * 2 of 3 gardian is tested in hardhat
-                </FormHelperText>
               </FormControl>
-              <Button w="full" colorScheme="brand" onClick={txSetGuardians} isDisabled={!guardian}>
+              <FormControl>
+                <FormLabel>Gardian 2</FormLabel>
+                <Input type="text" fontSize="xs" value={guardian2} onChange={(e) => setGuardians2(e.target.value)} />
+              </FormControl>
+
+              <Button w="full" colorScheme="brand" onClick={txSetGuardians} isDisabled={!guardian || !guardian2}>
                 Set Gardian
               </Button>
             </Stack>

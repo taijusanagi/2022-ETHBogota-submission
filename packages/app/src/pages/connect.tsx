@@ -122,7 +122,9 @@ const HomePage: NextPage = () => {
           <Stack spacing="4">
             <Stack spacing="2">
               <FormControl>
-                <FormLabel fontSize="lg">AcountAbstraction Address</FormLabel>
+                <FormLabel fontSize="md" fontWeight="bold">
+                  AcountAbstraction Address
+                </FormLabel>
                 <Text fontSize="xs">{socialRecoveryWalletAddress}</Text>
               </FormControl>
             </Stack>

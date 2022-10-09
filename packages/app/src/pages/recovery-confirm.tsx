@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { Button, FormControl, FormHelperText, FormLabel, Input, Link, Stack, Text } from "@chakra-ui/react";
+import { Button, FormControl, FormHelperText, FormLabel, Input, Stack, Text } from "@chakra-ui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -21,38 +21,20 @@ const HomePage: NextPage = () => {
   const [newOwner, setNewOwner] = useState("");
   const { data: signer } = useSigner();
   const { address } = useAccount();
-
+  const [guardian, setGuardians] = useState("");
+  const [guardian2, setGuardians2] = useState("");
   const [isOk, setIsOk] = useState(false);
   const [inRecovery, setInRecovery] = useState(false);
 
-  const [origin, setOrigin] = useState("");
-
-  useEffect(() => {
-    setOrigin(window.location.origin);
-  }, []);
-
-  const txInit = async () => {
+  const txRecovery = async () => {
     if (!signer || !address) {
       return;
     }
     const contract = SocialRecoveryWallet__factory.connect(socialRecoveryWalletAddress, signer);
-    await contract.initiateRecovery(newOwner);
-  };
-
-  const txSupport = async () => {
-    if (!signer || !address) {
-      return;
-    }
-    const contract = SocialRecoveryWallet__factory.connect(socialRecoveryWalletAddress, signer);
-    await contract.supportRecovery(newOwner);
-  };
-
-  const txCancel = async () => {
-    if (!signer || !address) {
-      return;
-    }
-    const contract = SocialRecoveryWallet__factory.connect(socialRecoveryWalletAddress, signer);
-    await contract.cancelRecovery();
+    await contract.executeRecovery(newOwner, [guardian, guardian2]).catch((err) => {
+      console.log(err.message);
+      alert("not enough guardian support");
+    });
   };
 
   useEffect(() => {
@@ -72,10 +54,6 @@ const HomePage: NextPage = () => {
       setInRecovery(inRecovery);
     });
   }, [signer, address, socialRecoveryWalletAddress]);
-
-  const onClickLink = () => {
-    router.push(`${origin}/recovery-confirm?address=${socialRecoveryWalletAddress}`);
-  };
 
   return (
     <DefaultLayout>
@@ -112,26 +90,24 @@ const HomePage: NextPage = () => {
             <FormControl>
               <FormLabel>NewOwner</FormLabel>
               <Input type="text" fontSize="xs" value={newOwner} onChange={(e) => setNewOwner(e.target.value)} />
-              <FormHelperText fontSize="xs" color="blue.600">
-                * please input new owner and execute recovery
-              </FormHelperText>
             </FormControl>
-            <Button w="full" colorScheme="brand" onClick={txInit} isDisabled={!newOwner || !isOk || inRecovery}>
-              Init
-            </Button>
-            <Button w="full" colorScheme="brand" onClick={txSupport} isDisabled={!newOwner || !isOk || !inRecovery}>
-              Support
-            </Button>
-            <Button w="full" onClick={txCancel} isDisabled={!inRecovery}>
-              Cancel
+            <FormControl>
+              <FormLabel>Gardian 1</FormLabel>
+              <Input type="text" fontSize="xs" value={guardian} onChange={(e) => setGuardians(e.target.value)} />
+            </FormControl>
+            <FormControl>
+              <FormLabel>Gardian 2</FormLabel>
+              <Input type="text" fontSize="xs" value={guardian2} onChange={(e) => setGuardians2(e.target.value)} />
+            </FormControl>
+            <Button
+              w="full"
+              colorScheme="brand"
+              onClick={txRecovery}
+              isDisabled={!newOwner || !isOk || !inRecovery || !guardian || !guardian2}
+            >
+              Recovery
             </Button>
           </Stack>
-
-          <Text
-            onClick={onClickLink}
-            as={Link}
-            fontSize="xs"
-          >{`${origin}/recovery-confirm?address=${socialRecoveryWalletAddress}`}</Text>
         </Stack>
       </Stack>
     </DefaultLayout>
