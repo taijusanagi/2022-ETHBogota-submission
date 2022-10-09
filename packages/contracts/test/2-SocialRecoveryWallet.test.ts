@@ -12,12 +12,17 @@ import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { Wallet } from "ethers";
-import { parseEther } from "ethers/lib/utils";
+import { formatEther, parseEther } from "ethers/lib/utils";
 import { ethers } from "hardhat";
 
 import { DeterministicDeployer } from "../lib/infinitism/DeterministicDeployer";
+import { PaymasterAPI } from "../lib/PaymasterAPI";
 import { SocialRecoveryWalletAPI } from "../lib/SocialRecoveryWalletAPI";
-import { SocialRecoveryWallet, SocialRecoveryWalletDeployer__factory } from "../typechain-types";
+import {
+  MockPaymaster__factory,
+  SocialRecoveryWallet,
+  SocialRecoveryWalletDeployer__factory,
+} from "../typechain-types";
 
 const provider = ethers.provider;
 
@@ -41,6 +46,8 @@ describe("SocialRecoveryWallet", () => {
     entryPoint = await new EntryPoint__factory(signer).deploy(1, 1);
     beneficiary = await signer.getAddress();
     recipient = await new SampleRecipient__factory(signer).deploy();
+
+    // await signer.sendTransaction({ to: paymaster.address, value: parseEther("10") });
 
     const factoryAddress = await DeterministicDeployer.deploy(SocialRecoveryWalletDeployer__factory.bytecode);
     api = new SocialRecoveryWalletAPI({
