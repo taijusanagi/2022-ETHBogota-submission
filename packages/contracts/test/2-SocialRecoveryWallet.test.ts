@@ -41,8 +41,7 @@ describe("SocialRecoveryWallet", () => {
     entryPoint = await new EntryPoint__factory(signer).deploy(1, 1);
     beneficiary = await signer.getAddress();
     recipient = await new SampleRecipient__factory(signer).deploy();
-    guardians = [initiateGuardian.address, supportGuardian.address, additionalGuardian.address];
-    threshold = 2;
+
     const factoryAddress = await DeterministicDeployer.deploy(SocialRecoveryWalletDeployer__factory.bytecode);
     api = new SocialRecoveryWalletAPI({
       provider,
@@ -145,6 +144,8 @@ describe("SocialRecoveryWallet", () => {
 
     before("init", async () => {
       contract = await ethers.getContractAt("SocialRecoveryWallet", walletAddress);
+      guardians = [initiateGuardian.address, supportGuardian.address, additionalGuardian.address];
+      threshold = 2;
       await contract.connect(owner).setGuardians(guardians, threshold);
     });
 
@@ -166,6 +167,9 @@ describe("SocialRecoveryWallet", () => {
         .connect(initiateGuardian)
         .executeRecovery(newOwner.address, [initiateGuardian.address, supportGuardian.address]);
       expect(await contract.owner()).to.equal(newOwner.address);
+
+      // double check
+      await api.getWalletAddress();
     });
   });
 });

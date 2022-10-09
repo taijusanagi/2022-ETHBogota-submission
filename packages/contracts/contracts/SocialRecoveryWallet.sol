@@ -148,8 +148,7 @@ contract SocialRecoveryWallet is ERC165, IERC1271, SimpleWallet {
   }
 
   function isValidSignature(bytes32 _hash, bytes calldata _signature) external view override returns (bytes4) {
-    bytes32 ethSignedMessageHash = ECDSA.toEthSignedMessageHash(_hash);
-    address recovered = ECDSA.recover(ethSignedMessageHash, _signature);
+    address recovered = ECDSA.recover(_hash, _signature);
     if (recovered == owner) {
       return type(IERC1271).interfaceId;
     } else {

@@ -23,6 +23,9 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
+    hardhat: {
+      chainId: 1337,
+    },
     goerli: {
       url: "https://goerli.infura.io/v3/95f65ab099894076814e8526f52c9149",
       accounts,
