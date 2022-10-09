@@ -2,50 +2,52 @@
 
 [!what-we-build](./docs/what-we-build.png)
 
-## Main stack
+## Description
 
-- AcountAbstraction
-- Web3Auth
-- WalletConnect
+Account Abstraction Gateway is web wallet app which utilizing the Account Abstraction and add-on social recovery functionality, user can connect any wallet and enjoy the secure account abstraction.
 
-## Main Development
+## Long Disctiption
 
-TBD
+Account Abstraction Gateway is easy to use and composable web-based account abstraction wallet tool.
 
-## Use case
+It has an add-on social recovery function, which is the main development of this hackahton.
 
-- Crosschain bridge without native token
-- Sponserd gas payment for easy boarding
-
-## Motivation
-
-We are having lot of delivery project with DID/VC based identity solution, and I believe Acount Abstraction is the very important milestone of blockchain identity
+Vitalik talks about Account Abstraction is the main focus of blockchain Identity. We are having a lot of delivery projects with DID/VC-based identity solutions, and I believe Account Abstraction is a very important milestone of blockchain identity
 
 I want to contribute to this movement!!
 
-## What We Build
+That's why we came to start building on Account Abstraction in ETHBogota.
 
-- Extended Acount Abstraction SDK with Infinitism team and social recovery add-on
+We are utilizing Infinitism Account Abstraction SDK, WalletConnect, and Web3Auth ad primary technology.
 
-- WallectConnect and Web3Auth for better UX
+It could be used for...
 
-## Regarding Web APp
+- Cross-chain bridge without native token
+- Sponsered gas payment for easy boarding
 
-I belieave web wallet can bring easy onboarding and user can enjoiy the benefit of Acount Abstraction
+So it should be many business chance as we go!
 
-## User Merit
+## How It's Made
 
-- Easy Start
+We used Infinitism SDK for the account abstraction contract implementation and SDK implementation. I can quickly learn and start projects with the SDK. We used wallet connect as a wallet client so that we can explain dApp integration is possible very easily. Also, we integrated the Web3Auth as social login, because we have a social recovery function, so this is a very important function.
 
-  - User can use any existing wallet and no additinal setting required
+## Main Technology Breakdown
 
-- Account Like Pro
+- AcountAbstraction
 
-  - Aggregated bulk Tx / Sponsered Tx / Cross-chain bridge without native token
+  - We use
+  - I implemented the Social Recovery wallet with Infinitism team account abstraction SDK. I also extended the nodejs SDK to make it usable in my react application.
+  - https://github.com/taijusanagi/2022-ETHBogota-submission/blob/main/packages/contracts/contracts/SocialRecoveryWallet.sol
 
-- Social Recovery
+- Web3Auth
 
-  - User can reduce Gox risk of the imporant wallet / identity
+  - I used web3 auth with wagmi and RainbowKit, my app has social recovery function, and Web3Auth makes it easier to make it secure.
+  - https://github.com/taijusanagi/2022-ETHBogota-submission/blob/main/packages/app/src/lib/wallet/index.ts#L18
+
+- WalletConnect
+
+  - I implemented wallet connect powered dApp and wallet in my app. Users can use any wallet via wallet connect, and my app can access as account abstract wallet via wallet connect
+  - https://github.com/taijusanagi/2022-ETHBogota-submission/blob/main/packages/app/src/pages/connect.tsx
 
 ## Demo Link
 

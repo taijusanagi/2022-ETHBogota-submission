@@ -42,6 +42,8 @@ contract SocialRecoveryWallet is ERC165, IERC1271, SimpleWallet {
   /// @notice mapping from guardian address to most recent Recovery struct created by them
   mapping(address => Recovery) public guardianToRecovery;
 
+  uint256 public constant version = 1;
+
   /************************************************
    *  MODIFIERS & EVENTS
    ***********************************************/

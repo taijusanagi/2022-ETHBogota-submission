@@ -21,6 +21,7 @@ export const rainbowWeb3AuthConnector = ({ chains }: RainbowWeb3AuthConnectorPro
         options: {
           clientId: "BNK6eCkCRwqX3EXouKjJ1OZ1AzsDB3VU8OXfqD9F4BZLpXQJ9SI-IRGJt03AkVK2NQhjHCbnn4xy4Y0SmZYEWAE",
           network: "testnet",
+          chainId: "0x5",
           socialLoginConfig: {
             mfaLevel: "default",
           },
@@ -37,7 +38,7 @@ const connectors = connectorsForWallets([
   {
     groupName: "Recommended",
     wallets: [
-      rainbowWeb3AuthConnector({ chains }),
+      rainbowWeb3AuthConnector({ chains: [chain.goerli] }),
       wallet.walletConnect({ chains }),
       wallet.metaMask({ chains }),
       wallet.rainbow({ chains }),
