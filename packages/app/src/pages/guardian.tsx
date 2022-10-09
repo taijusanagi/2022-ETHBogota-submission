@@ -47,7 +47,7 @@ const HomePage: NextPage = () => {
             <Stack spacing="2">
               <FormControl>
                 <FormLabel fontSize="md" fontWeight="bold">
-                  AcountAbstraction Address
+                  AcountAbstraction Address (ERC 4337)
                 </FormLabel>
                 <Text fontSize="xs">{socialRecoveryWalletAddress}</Text>
               </FormControl>
@@ -60,6 +60,9 @@ const HomePage: NextPage = () => {
               <FormControl>
                 <FormLabel>Gardian 2</FormLabel>
                 <Input type="text" fontSize="xs" value={guardian2} onChange={(e) => setGuardians2(e.target.value)} />
+                <FormHelperText fontSize="xs" color="blue.600">
+                  * this is 2 of 2 social recovery for simple demo
+                </FormHelperText>
               </FormControl>
 
               <Button w="full" colorScheme="brand" onClick={txSetGuardians} isDisabled={!guardian || !guardian2}>

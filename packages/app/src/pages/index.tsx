@@ -69,7 +69,7 @@ const HomePage: NextPage = () => {
             <Stack spacing="2">
               <FormControl>
                 <FormLabel fontSize="md" fontWeight="bold">
-                  AcountAbstraction Address
+                  AcountAbstraction Address (ERC 4337)
                 </FormLabel>
                 <Text fontSize="xs">{socialRecoveryWalletAddress}</Text>
                 <FormHelperText fontSize="xs" color="blue.600">
@@ -83,6 +83,9 @@ const HomePage: NextPage = () => {
                 <Text fontSize="xs">{owner}</Text>
                 <FormHelperText fontSize="xs" color="blue.600">
                   * owner is EOA for demo, but it could be any for easy onboarding
+                </FormHelperText>
+                <FormHelperText fontSize="xs" color="blue.600">
+                  * owner remap after recovery is not implemented for this demo
                 </FormHelperText>
               </FormControl>
               <FormControl>
