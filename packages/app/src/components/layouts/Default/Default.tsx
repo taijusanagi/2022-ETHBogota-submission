@@ -1,7 +1,8 @@
-import { Box, Button, ButtonGroup, Center, Container, Flex, HStack, Text } from "@chakra-ui/react";
+import { Box, Center, Container, Flex, HStack, Text } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/router";
 import React, { useMemo } from "react";
+import { useConnect } from "wagmi";
 
 import { useIsDesktop } from "@/hooks/useIsDesktop";
 
@@ -12,6 +13,8 @@ export interface DefaultLayoutProps {
 export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
   // ========== Nextjs ===========
   const router = useRouter();
+
+  const { connect } = useConnect();
 
   // ========== Hook ===========
   const { isDesktop } = useIsDesktop();

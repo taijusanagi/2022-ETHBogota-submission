@@ -1,31 +1,35 @@
 /* eslint-disable camelcase */
 import { EntryPoint, EntryPoint__factory } from "@account-abstraction/contracts";
-import { SampleRecipient, SampleRecipient__factory } from "@account-abstraction/utils/dist/src/types";
 import { useEffect, useState } from "react";
-import { useNetwork, useSigner } from "wagmi";
+import { useAccount, useNetwork, useSigner } from "wagmi";
 
 import { SocialRecoveryWalletAPI } from "../../../contracts/lib/SocialRecoveryWalletAPI";
 
 export const useSocialRecoveryWallet = () => {
   const { data: signer } = useSigner();
+  const { isConnected, address } = useAccount();
 
   const network = useNetwork();
   const [socialRecoveryWalletAPI, setSocialRecoveryWalletAPI] = useState<SocialRecoveryWalletAPI>();
   const [socialRecoveryWalletAddress, setSocialRecoveryWalletAddress] = useState("");
+  const [isDeployed, setIsDeployed] = useState(false);
   const [entryPoint, setEntryPoint] = useState<EntryPoint>();
-  const [sampleRecipient, setSampleRecipient] = useState<SampleRecipient>();
 
   useEffect(() => {
-    if (!signer) {
+    if (!signer || !isConnected) {
       setSocialRecoveryWalletAPI(undefined);
       setSocialRecoveryWalletAddress("");
       return;
     }
-    if (!network.chain || (network.chain.network !== "localhost" && network.chain.network !== "goerli")) {
+
+    window.localStorage.setItem("debug", "aa*");
+
+    const connectedNetwork = network.chain?.network ? network.chain.network : "goerli";
+    if (connectedNetwork !== "localhost" && connectedNetwork !== "goerli") {
       alert("please connect goerli network!");
       return;
     }
-    import(`../../../contracts/deployments/${network.chain.network}.json`).then((deployments) => {
+    import(`../../../contracts/deployments/${connectedNetwork}.json`).then((deployments) => {
       const socialRecoveryWalletAPI = new SocialRecoveryWalletAPI({
         // assuming if signer is not null, provider is also not null
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -35,19 +39,28 @@ export const useSocialRecoveryWallet = () => {
         factoryAddress: deployments.factory,
       });
       setSocialRecoveryWalletAPI(socialRecoveryWalletAPI);
-      // get create2 address when init the app
-      socialRecoveryWalletAPI.getWalletAddress().then((socialRecoveryWalletAddress) => {
+
+      // eslint-disable-next-line no-use-before-define
+      const socialRecoveryWalletAddress = window.localStorage.getItem(`${address}:connectedNetwork`);
+
+      if (!socialRecoveryWalletAddress) {
+        // get create2 address when init the app
+        socialRecoveryWalletAPI.getWalletAddress().then((socialRecoveryWalletAddress) => {
+          window.localStorage.setItem(`${address}:connectedNetwork`, socialRecoveryWalletAddress);
+          setSocialRecoveryWalletAddress(socialRecoveryWalletAddress);
+          signer.provider!.getCode(socialRecoveryWalletAddress).then((code) => setIsDeployed(code !== "0x"));
+        });
+      } else {
         setSocialRecoveryWalletAddress(socialRecoveryWalletAddress);
-      });
+        signer.provider!.getCode(socialRecoveryWalletAddress).then((code) => setIsDeployed(code !== "0x"));
+      }
+
       // assuming if signer is not null, provider is also not null
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const entryPoint = EntryPoint__factory.connect(deployments.entryPoint, signer);
       setEntryPoint(entryPoint);
-
-      const sampleRecipient = SampleRecipient__factory.connect(deployments.sampleRecipient, signer);
-      setSampleRecipient(sampleRecipient);
     });
-  }, [signer, network.chain]);
+  }, [signer, network.chain, isConnected]);
 
-  return { entryPoint, sampleRecipient, socialRecoveryWalletAPI, socialRecoveryWalletAddress };
+  return { entryPoint, socialRecoveryWalletAPI, socialRecoveryWalletAddress, isDeployed };
 };

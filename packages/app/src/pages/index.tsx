@@ -1,6 +1,7 @@
 import { Button, FormControl, FormHelperText, FormLabel, Input, Stack, Text } from "@chakra-ui/react";
 import WalletConnect from "@walletconnect/client";
 import { convertHexToUtf8 } from "@walletconnect/utils";
+import { parseEther } from "ethers/lib/utils";
 import { NextPage } from "next";
 import { useState } from "react";
 import { useAccount, useNetwork, useSigner } from "wagmi";
@@ -16,8 +17,7 @@ export interface PeerMeta {
 }
 
 const HomePage: NextPage = () => {
-  const { socialRecoveryWalletAddress, sampleRecipient, entryPoint, socialRecoveryWalletAPI } =
-    useSocialRecoveryWallet();
+  const { socialRecoveryWalletAddress, entryPoint, socialRecoveryWalletAPI, isDeployed } = useSocialRecoveryWallet();
   const network = useNetwork();
   const { data: signer } = useSigner();
   const { address } = useAccount();
@@ -31,13 +31,17 @@ const HomePage: NextPage = () => {
   const [peerMeta, setPeerMeta] = useState<PeerMeta>();
 
   const deploy = async () => {
-    if (!socialRecoveryWalletAPI || !entryPoint || !sampleRecipient || !signer || !address) {
+    if (!socialRecoveryWalletAPI || !entryPoint || !signer || !address) {
       return;
     }
+    await signer.sendTransaction({
+      to: socialRecoveryWalletAddress,
+      value: parseEther("0.01"),
+    });
     // this is null op for just deploy contract wallet
     const op = await socialRecoveryWalletAPI.createSignedUserOp({
-      target: sampleRecipient.address,
-      data: sampleRecipient.interface.encodeFunctionData("something", ["hello"]),
+      target: NULL_ADDRESS,
+      data: NULL_BYTES,
     });
     await entryPoint.handleOps([op], address);
   };
@@ -127,8 +131,8 @@ const HomePage: NextPage = () => {
                   * social wallet address is determined counterfactually by create2
                 </FormHelperText>
               </FormControl>
-              <Button w="full" isLoading={isWalletConnectLoading} onClick={deploy}>
-                Deploy
+              <Button w="full" isLoading={isWalletConnectLoading} onClick={deploy} disabled={isDeployed}>
+                {isDeployed ? "Already deployed" : "Deploy"}
               </Button>
             </Stack>
             {walletConnectMode === "notConnected" && (
