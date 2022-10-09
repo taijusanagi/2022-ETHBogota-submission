@@ -82,7 +82,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
           </Center>
           <Flex justify="space-between" alignItems={"center"} h="8">
             <Text fontSize="xl" fontWeight={"bold"}>
-              AcountAbstraction
+              AA Gateway
             </Text>
             <HStack>
               <ConnectButton showBalance={false} chainStatus="none" />
@@ -90,8 +90,10 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
           </Flex>
         </Box>
       </Container>
-      <Container maxW="2xl" py="12" px="8" boxShadow={"base"} borderRadius="2xl" bgColor={"white"}>
-        {children}
+      <Container maxW="2xl">
+        <Box py="12" px="8" boxShadow={"base"} borderRadius="2xl" bgColor={"white"}>
+          {children}
+        </Box>
       </Container>
     </Flex>
   );

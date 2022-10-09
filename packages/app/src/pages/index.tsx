@@ -31,12 +31,17 @@ const HomePage: NextPage = () => {
       to: socialRecoveryWalletAddress,
       value: parseEther("0.01"),
     });
-    //
-    // const op = await socialRecoveryWalletAPI.createSignedUserOp({
-    //   target: NULL_ADDRESS,
-    //   data: NULL_BYTES,
-    // });
-    // await entryPoint.handleOps([op], address);
+  };
+
+  const deploy2 = async () => {
+    if (!socialRecoveryWalletAPI || !entryPoint || !signer || !address) {
+      return;
+    }
+    const op = await socialRecoveryWalletAPI.createSignedUserOp({
+      target: NULL_ADDRESS,
+      data: NULL_BYTES,
+    });
+    await entryPoint.handleOps([op], address);
   };
 
   return (
@@ -53,7 +58,7 @@ const HomePage: NextPage = () => {
                 </FormHelperText>
               </FormControl>
               <FormControl>
-                <FormLabel fontSize="lg">Is Deployed</FormLabel>
+                <FormLabel fontSize="lg">IsDeployed</FormLabel>
                 <Text fontSize="xs">{isDeployed.toString()}</Text>
                 <FormHelperText fontSize="xs" color="blue.600">
                   * no need to deploy to use acount abstraction wallet
@@ -79,6 +84,10 @@ const HomePage: NextPage = () => {
                 colorScheme="brand"
               >
                 Deposit 0.01ETH
+                {/* {isDeployed ? "Already deployed" : "Deploy"} */}
+              </Button>
+              <Button w="full" isLoading={isWalletConnectLoading} onClick={deploy2} disabled={isDeployed}>
+                Deploy
                 {/* {isDeployed ? "Already deployed" : "Deploy"} */}
               </Button>
             </Stack>

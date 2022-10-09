@@ -43,7 +43,6 @@ const HomePage: NextPage = () => {
                 <Text fontSize="xs">{socialRecoveryWalletAddress}</Text>
               </FormControl>
             </Stack>
-
             <Stack spacing="2">
               <FormControl>
                 <FormLabel>Gardian</FormLabel>
