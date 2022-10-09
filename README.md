@@ -1,5 +1,7 @@
 # ETHBogota Submission: Account Abstraction with Social Recovery
 
+[!what-we-build](./docs/what-we-build.png)
+
 ## Main stack
 
 - AcountAbstraction
