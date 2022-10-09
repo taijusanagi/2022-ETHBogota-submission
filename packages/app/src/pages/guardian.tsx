@@ -51,6 +51,9 @@ const HomePage: NextPage = () => {
                 <FormHelperText fontSize="xs" color="blue.600">
                   * only one gardian is set for simple demo
                 </FormHelperText>
+                <FormHelperText fontSize="xs" color="blue.600">
+                  * 2 of 3 gardian is tested in hardhat
+                </FormHelperText>
               </FormControl>
               <Button w="full" colorScheme="brand" onClick={txSetGuardians} isDisabled={!guardian}>
                 Set Gardian

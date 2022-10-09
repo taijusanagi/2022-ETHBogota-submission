@@ -17,6 +17,8 @@ export const useSocialRecoveryWallet = () => {
   const [entryPoint, setEntryPoint] = useState<EntryPoint>();
   const [contract, setContract] = useState<SocialRecoveryWallet>();
 
+  const [balance, setBalance] = useState("0");
+
   useEffect(() => {
     if (!signer || !isConnected) {
       setSocialRecoveryWalletAPI(undefined);
@@ -53,12 +55,15 @@ export const useSocialRecoveryWallet = () => {
           signer.provider!.getCode(socialRecoveryWalletAddress).then((code) => setIsDeployed(code !== "0x"));
           const contract = SocialRecoveryWallet__factory.connect(socialRecoveryWalletAddress, signer);
           setContract(contract);
+          signer.provider?.getBalance(socialRecoveryWalletAddress).then((balance) => setBalance(balance.toString()));
         });
       } else {
         setSocialRecoveryWalletAddress(socialRecoveryWalletAddress);
         signer.provider!.getCode(socialRecoveryWalletAddress).then((code) => setIsDeployed(code !== "0x"));
         const contract = SocialRecoveryWallet__factory.connect(socialRecoveryWalletAddress, signer);
         setContract(contract);
+
+        signer.provider?.getBalance(socialRecoveryWalletAddress).then((balance) => setBalance(balance.toString()));
       }
 
       // assuming if signer is not null, provider is also not null
@@ -68,5 +73,5 @@ export const useSocialRecoveryWallet = () => {
     });
   }, [signer, network.chain, isConnected]);
 
-  return { entryPoint, socialRecoveryWalletAPI, socialRecoveryWalletAddress, isDeployed, contract };
+  return { entryPoint, socialRecoveryWalletAPI, socialRecoveryWalletAddress, isDeployed, contract, balance };
 };

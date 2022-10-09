@@ -57,7 +57,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
 
   return (
     <Flex minHeight={"100vh"} direction={"column"}>
-      <Container as="section" maxW="8xl">
+      <Container as="section" maxW="8xl" mb="8">
         <Box as="nav" py="4">
           <Center
             my="4"
@@ -72,11 +72,11 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
               <Button onClick={onClickAccount} {...accountButtonProps}>
                 Account
               </Button>
-              <Button onClick={onClickGuardian} {...factoryButtonProps}>
-                Guardian
-              </Button>
               <Button onClick={onClickConnect} {...connectButtonProps}>
                 Connect
+              </Button>
+              <Button onClick={onClickGuardian} {...factoryButtonProps}>
+                Guardian
               </Button>
             </ButtonGroup>
           </Center>
@@ -90,7 +90,7 @@ export const DefaultLayout: React.FC<DefaultLayoutProps> = ({ children }) => {
           </Flex>
         </Box>
       </Container>
-      <Container flex={1} maxW="xl" py="12">
+      <Container maxW="2xl" py="12" px="8" boxShadow={"base"} borderRadius="2xl" bgColor={"white"}>
         {children}
       </Container>
     </Flex>
